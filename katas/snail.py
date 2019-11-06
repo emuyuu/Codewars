@@ -4,17 +4,25 @@ def snail(snail_map):
 
     while snail_map:
         for i, array in enumerate(snail_map):
-            array_length = len(snail_map)
+            # 0x0の場合
+            if len(array) == 0:
+                return []
 
-            # 最初の一行でこの処理が行われる
-            if i == 0:
-                return_array.append(array)
-                if len(array) == 1:
-                    del snail_map[0]
-                    return_array = list(flatten(return_array))
+            # リストの中身が1つの場合
+            if len(array) == 1:
+                return_array.append(snail_map[0])
+                return_array = list(flatten(return_array))
+                del snail_map[0]
                 continue
 
-            # 最後の一行でこの処理が行われる
+            array_length = len(snail_map)
+
+            # ↑以外の場合、最初の一行ではこの処理が行われる
+            if i == 0:
+                return_array.append(array)
+                continue
+
+            # 最後の一行ではこの処理が行われる
             if i == array_length - 1:
                 array.reverse()
                 return_array.append(array)
@@ -39,6 +47,7 @@ def snail(snail_map):
             # リストの最後の要素を追加。
             return_array.append(array[-1])
 
+            # その行の最初と最後の要素を削除
             del array[0]
             del array[-1]
 
@@ -74,11 +83,12 @@ class TestSnail(unittest.TestCase):
         expected = [1, 2, 3, 2, 2, 5, 4, 5, 6, 7, 1, 8, 9, 4, 3, 2]
         self.assertEqual(snail(array), expected)
 
-        array = [[1, 1, 1, 1, 1],
-                 [2, 2, 2, 2, 2],
-                 [3, 3, 3, 3, 3],
-                 [4, 4, 4, 4, 4]]
-        expected = [1, 1, 1, 1, 1, 2, 3, 4, 4, 4, 4, 4, 3, 2, 2, 2, 2, 3, 3, 3]
+        array = [[1]]
+        expected = [1]
+        self.assertEqual(snail(array), expected)
+
+        array = [[]]
+        expected = []
         self.assertEqual(snail(array), expected)
 
 
